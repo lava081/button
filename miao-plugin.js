@@ -1,21 +1,24 @@
 export default class Button {
   constructor () {
     this.plugin = {
-      // 插件名称
       name: '状态按钮',
-      // 描述
       dsc: '状态按钮',
-      // 优先级
       priority: 100,
       rule: [
         {
-          /** 命令正则匹配 */
+          reg: '^#?喵喵(命令|帮助|菜单|help|说明|功能|指令|使用说明)$',
+          fnc: 'help'
+        },
+        {
           reg: '^#(星铁|原神)?(全部面板更新|更新全部面板|获取游戏角色详情|更新面板|面板更新)\s*(\d{9})?$',
-          /** 执行方法 */
           fnc: 'profile'
         },
         {
           reg: '^#(原神|星铁)?绑定(uid|UID)?[1-9][0-9]{8}$',
+          fnc: 'bingUid'
+        },
+        {
+          reg: '^#(原神|星铁)?(删除)?(uid|UID)',
           fnc: 'bingUid'
         },
         {
@@ -28,6 +31,22 @@ export default class Button {
         }
       ]
     }
+  }
+  help (){
+    const button = [
+      { label: '圣遗物', data: `/圣遗物列表` },
+      { label: '深渊', data: `/喵喵深渊` },
+      { label: '练度统计', data: `/原神练度统计` },
+
+      { label: '体力', data: `/原神体力` },
+      { label: '今日素材', data: `/今日素材` },
+      { label: '签到', data: `/原神签到` },
+
+      { label: '绑定uid', data: `/原神绑定` },
+      { label: '米游社扫码', data: `/扫码登录` },
+      { label: '更新面板', data: `/原神更新面板` },
+    ]
+    return toButton(button, 3)
   }
 
   profile (e) {
