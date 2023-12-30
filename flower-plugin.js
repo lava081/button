@@ -58,7 +58,6 @@ export default class Button {
     list = [
       { label: `单抽`, data: `/${game}单抽${type[0]}` },
       { label: `十连`, data: `/${game}十连${type[0]}` },
-      { label: `九十连`, data: `/${game}九十连${type[0]}`},
     ]
     button.push(...toButton(list))
 

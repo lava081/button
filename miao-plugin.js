@@ -14,7 +14,7 @@ export default class Button {
           fnc: 'profile'
         },
         {
-          reg: '^#(原神|星铁)?绑定(uid|UID)?[1-9][0-9]{8}$',
+          reg: '^#(原神|星铁)?(绑定)?绑定(uid|UID)?[1-9][0-9]{8}$',
           fnc: 'bingUid'
         },
         {
@@ -27,6 +27,10 @@ export default class Button {
         },
         {
           reg: /^(#(原神|星铁)?(角色|查询|查询角色|角色查询|人物)[ |0-9]*$)|(^(#*uid|#*UID)\+*[1|2|5-9][0-9]{8}$)|(^#[\+|＋]*[1|2|5-9][0-9]{8})/,
+          fnc: 'avatarList'
+        },
+        {
+          reg: '#?喵喵角色卡片',
           fnc: 'avatarList'
         }
       ]
@@ -172,7 +176,7 @@ export default class Button {
       { label: '练度统计', data: `/${game}练度统计` },
       { label: '体力', data: `/体力` },
     ]
-    const button = toButton(list)
+    const button = toButton(list,3)
     return button
   }
 }
