@@ -64,11 +64,10 @@ export default class Button {
     list = [
       { label: `单抽`, data: `/${game}单抽${type[0]}` },
       { label: `十连`, data: `/${game}十连${type[0]}` },
-      { label: `八十连`, data: `/${game}八十连${type[0]}` },
     ]
     button.push(...toButton(list))
 
-    number = ['派蒙','八十连','十连','单抽']
+    number = ['派蒙','十连','单抽']
     number[0] = number[Math.floor(Math.random()*4)]
     type = ['','2','常驻池',`${weapon}池`]
     type[0] = type[Math.floor(Math.random()*4)]
