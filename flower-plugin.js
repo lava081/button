@@ -35,6 +35,12 @@ export default class Button {
     const weapon = e.isSr?'光锥':'武器'
     let number = e.msg.match(/(([一二三四五六七八九]?[单十百10])|抽)[连抽卡奖]/)
     let type = e.msg.match(/武器|常驻|2/)
+    if(e.msg.match(/定轨/)){
+      number = []
+      type = []
+      number[0] = '十连'
+      type[0] = '武器'
+    }
 
     if(type == null){
       type = []
@@ -58,16 +64,17 @@ export default class Button {
     list = [
       { label: `单抽`, data: `/${game}单抽${type[0]}` },
       { label: `十连`, data: `/${game}十连${type[0]}` },
+      { label: `八十连`, data: `/${game}八十连${type[0]}` },
     ]
     button.push(...toButton(list))
 
-    number = ['派蒙','十连','单抽']
-    number[0] = number[Math.floor(Math.random()*3)]
+    number = ['派蒙','八十连','十连','单抽']
+    number[0] = number[Math.floor(Math.random()*4)]
     type = ['','2','常驻池',`${weapon}池`]
     type[0] = type[Math.floor(Math.random()*4)]
     if(number[0] == '派蒙')
       list = [
-        { label: `交给派蒙抽`, data: `/抽卡的钱被小派蒙拿去买甜甜花酿鸡了` },
+        { label: `交给派蒙抽`, data: `抽卡的钱被小派蒙拿去买甜甜花酿鸡了` },
       ]
     else
       list = [

@@ -14,11 +14,11 @@ export default class Button {
           fnc: 'profile'
         },
         {
-          reg: '^#(原神|星铁)?(绑定)?绑定(uid|UID)?[1-9][0-9]{8}$',
+          reg: '^#?(原神|星铁)?绑定(绑定)?( )?(uid|UID)?[1-9][0-9]{8}$',
           fnc: 'bingUid'
         },
         {
-          reg: '^#(原神|星铁)?(删除)?(uid|UID)',
+          reg: '^#(原神|星铁)?(删除)?( )?(uid|UID)',
           fnc: 'bingUid'
         },
         {
