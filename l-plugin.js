@@ -25,6 +25,10 @@ export default class Button {
         reg: '^#?塔罗牌',
         fnc: 'tarot'
       },
+      {
+        reg: '^#?r(oll)? ',
+        fnc: 'roll'
+      },
       ]
     }
   }
@@ -34,10 +38,10 @@ export default class Button {
     const button = []
     list = [
       { label: '塔罗牌', data: `塔罗牌` },
-      { label: '美食推荐', data: `咱今天吃什么` },
+      { label: '美食推荐', data: `今天吃什么` },
       { label: '求签', data: `求签` },
     ]
-    button.push(...toButton(list), 3, true)
+    button.push(...toButton(list, 3, true))
     list = [
       { label: 'LeetCode', data: `随机一题` },
     ]
@@ -62,19 +66,26 @@ export default class Button {
     const button = [
       { label: '我要解签…', data: `御神签` },
     ]
-    return toButton(button)
+    return toButton(button, 3, true)
   }
 
   what2eat(){
     const button = [
       { label: '换一批', data: `今天吃什么` },
     ]
-    return toButton(button)
+    return toButton(button, 3, true)
   }
 
   tarot(){
     const button = [
       { label: '再卜一卦', data: `塔罗牌` },
+    ]
+    return toButton(button, 3, true)
+  }
+
+  roll(){
+    const button = [
+      { label: '我不满意', data: `${this.e.msg.replace(/#/,'\/')}` },
     ]
     return toButton(button)
   }
