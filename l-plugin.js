@@ -83,9 +83,9 @@ export default class Button {
     return toButton(button, 3, true)
   }
 
-  roll(){
+  roll(e){
     const button = [
-      { label: '我不满意', data: `${this.e.msg.replace(/#/,'\/')}` },
+      { label: '我不满意', data: `${e.msg.replace(/#/,'\/')}` },
     ]
     return toButton(button)
   }
