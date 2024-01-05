@@ -63,7 +63,6 @@ export default class Button {
 
   async sign(){
     const button = [
-        { label: `米游社签到`, data: `/米游社全部签到` },
         { label: `原神签到`, data: `/原神签到` },
         { label: `星铁签到`, data: `/星铁签到` },
 

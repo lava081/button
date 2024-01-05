@@ -14,7 +14,7 @@ export default class Button {
           fnc: 'profile'
         },
         {
-          reg: '^#?(原神|星铁)?绑定(绑定)?( )?(uid|UID)?[1-9][0-9]{8}$',
+          reg: '^(#|\/)?(原神|星铁)?绑定(#|\/)?(绑定)?( )?(uid|UID)?( )?[1-9]',
           fnc: 'bingUid'
         },
         {
@@ -54,7 +54,7 @@ export default class Button {
   }
 
   profile (e) {
-    const roleList = Object.keys(e.newChar) || []
+    const roleList = e.newChar ? (Object.keys(e.newChar) || []) : []
     const message = []
     const button = []
     let id = Date.now()
