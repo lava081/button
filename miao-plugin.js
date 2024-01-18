@@ -1,3 +1,4 @@
+/*原作者：风间叶(1936472877), Lain.(1072411694)*/
 export default class Button {
   constructor () {
     this.plugin = {
@@ -10,7 +11,7 @@ export default class Button {
           fnc: 'help'
         },
         {
-          reg: '^#(星铁|原神)?(全部面板更新|更新全部面板|获取游戏角色详情|更新面板|面板更新)\s*(\d{9})?$',
+          reg: '^#(星铁|原神)?(全部面板更新|更新全部面板|获取游戏角色详情|更新面板|面板更新)',
           fnc: 'profile'
         },
         {
@@ -50,72 +51,25 @@ export default class Button {
       { label: '米游社扫码', data: `/扫码登录` },
       { label: '更新面板', data: `/原神更新面板` },
     ]
-    return toButton(button, 3)
+    return Bot.Button(button, 3)
   }
 
   profile (e) {
-    const roleList = e.newChar ? (Object.keys(e.newChar) || []) : []
-    const message = []
+    const roleList = e?.newChar ? (Object.keys(e.newChar) || []) : []
     const button = []
-    let id = Date.now()
 
-    for (let i of roleList) {
-      button.push({
-        id: String(id),
-        render_data: { label: i, style: 1},
-        action: {
-          type: 2,
-          permission: { type: 2 },
-          data: `/${e.game === 'sr' ? '星铁' : '原神'}${i}面板`
-        }
-      })
-      ++id
-    }
+    const list = [
+      { label: '扫码登录', data: '/扫码登录' },
+      { label: '更新面板', data: `/${e.game === 'sr' ? '星铁' : '原神'}更新面板` },
+      { label: '绑定uid', data: `/${e.game === 'sr' ? '星铁' : '原神'}绑定` },
+    ]
+    button.push(...Bot.Button(list))
 
-    /** 获取列数 */
-    let batchSize = 2
-
-    for (let i = 0; i < button.length; i += batchSize) {
-      message.push({
-        type: 'button',
-        buttons: button.slice(i, i + batchSize)
-      })
-    }
-
-    /** 顶部更新按钮 */
-    message.unshift({
-      type: 'button',
-      buttons: [
-        {
-          id: '1',
-          render_data: { label: '米游社登录', style: 1 },
-          action: {
-            type: 2,
-            permission: { type: 2 },
-            data: `/扫码登录`
-          }
-        },
-        {
-          id: '2',
-          render_data: { label: '更新面板', "style": 1},
-          action: {
-            type: 2,
-            permission: { type: 2 },
-            data: `/${e.game === 'sr' ? '星铁' : '原神'}更新面板`
-          }
-        },
-        {
-          id: '3',
-          render_data: { label: '绑定uid', style: 1 },
-          action: {
-            type: 2,
-            permission: { type: 2 },
-            data: `/${e.game === 'sr' ? '星铁' : '原神'}绑定`
-          }
-        },
-      ]
-    })
-    return message
+    const list2 = []
+    for (let role of roleList)
+      list2.push({ label: role, data: `/${e.game === 'sr' ? '星铁' : '原神'}${role}面板` })
+    button.push(...Bot.Button(list2, 2))
+    return button
   }
 
   bingUid(e) {
@@ -132,8 +86,8 @@ export default class Button {
       { label: '绑定uid', data: `/${game}绑定` }
     ]
     const button = []
-    button.push(...toButton(list))
-    button.push(...toButton(list2))
+    button.push(...Bot.Button(list))
+    button.push(...Bot.Button(list2))
     return button
   }
 
@@ -142,7 +96,7 @@ export default class Button {
       return false
     }
     e.isCustom = true
-    const raw = e.message[0].text.replace(/#|老婆|老公|星铁|原神/g, '').trim()
+    const raw = e.msg.replace(/#|老婆|老公|星铁|原神/g, '').trim()
     const reg = /^#*([^#]+)\s*(详细|详情|面板|面版|圣遗物|武器[1-7]?|伤害([1-9]+\d*)?)\s*(\d{9})*(.*[换变改].*)?$/
     const name = reg.exec(raw)[1]
     const game = (e.game === 'sr' || e.isSr) ? '星铁' : ''
@@ -150,15 +104,21 @@ export default class Button {
       const button = this.profile (e)
       return button
     } else {
+      const button = []
       const list = [
         { label: `${name}攻略`, data: `/${game}${name}攻略` },
         { label: `${name}排行`, data: `/${game}${name}排行` },
+
+        { label: `${name}面板`, data: `/${game}${name}面板` },
         { label: '极限面板', data: `/${game}${name}极限面板` },
+      ]
+      button.push(...Bot.Button(list, 2))
+      const list2 = [
         { label: '绑定uid', data: `/${game}绑定` },
-        { label: '米游社登录', data: `/扫码登录` },
+        { label: '扫码登录', data: `/扫码登录` },
         { label: '更新面板', data: `/${game}更新面板` },
       ]
-      const button = toButton(list)
+      button.push(...Bot.Button(list2))
       return button
     }
   }
@@ -176,36 +136,7 @@ export default class Button {
       { label: '练度统计', data: `/${game}练度统计` },
       { label: '体力', data: `/体力` },
     ]
-    const button = toButton(list,3)
+    const button = Bot.Button(list,3)
     return button
   }
-}
-
-function toButton(list, line = 2) {
-  let button = []
-  let arr = []
-  let index = 1
-  for (const i of list) {
-    arr.push({
-      id: String(Date.now()),
-      render_data: {
-        label: i.label,
-        style: 1
-      },
-      action: {
-        type: 2,
-        permission: { type: 2 },
-        data: i.data,
-        unsupport_tips: "code: 45",
-      }
-    })
-    if (index % line == 0 || index == list.length) {
-      button.push({type: 'button',
-        buttons: arr
-      })
-      arr = []
-    }
-    index++
-  }
-  return button
 }
