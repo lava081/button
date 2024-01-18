@@ -28,7 +28,7 @@ export default class Button {
       { label: '用户绑定', data: `/id绑定` },
       { label: '用户ID', data: `${e.user_id}` },
     ]
-    return toButton(button)
+    return Bot.Button(button, 2)
   }  
   
   writeOpenid () {
@@ -40,35 +40,6 @@ export default class Button {
       { label: '群聊ID', data: `${e.group_id}` },
       { label: '用户ID', data: `${e.user_id}` },
     ]
-    return toButton(button)
+    return Bot.Button(button)
   }
-}
-
-function toButton(list, line = 2) {
-  let button = []
-  let arr = []
-  let index = 1
-  for (const i of list) {
-    arr.push({
-      id: String(Date.now()),
-      render_data: {
-        label: i.label,
-        style: 1
-      },
-      action: {
-        type: 2,
-        permission: { type: 2 },
-        data: i.data,
-        unsupport_tips: "code: 45",
-      }
-    })
-    if (index % line == 0 || index == list.length) {
-      button.push({type: 'button',
-        buttons: arr
-      })
-      arr = []
-    }
-    index++
-  }
-  return button
 }
