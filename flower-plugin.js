@@ -6,11 +6,11 @@ export default class Button {
       priority: 100,
       rule: [
         {
-            reg: '^#*(10|[武器池常驻]*([一二三四五六七八九]?[十百]+)|抽)[连抽卡奖][123武器池常驻]*$',
+            reg: '^#?((星铁)?)*(10|[武器池常驻]*([一二三四五六七八九]?[十百]+)|抽)[连抽卡奖][123武器池常驻]*$',
             fnc: 'gacha'
           },
           {
-            reg: '(^#*定轨|^#定轨(.*))$',
+            reg: '^#?(星铁)?定轨$',
             fnc: 'gacha'
           },
           {
@@ -18,11 +18,11 @@ export default class Button {
             fnc: 'gacha'
           },
           {
-            reg: '^#*单抽[12武器池常驻]*$',
+            reg: '^#?((星铁)?)*单抽[12武器池常驻]*$',
             fnc: 'gacha'
           },
           {
-            reg: '^#*(原神)?转生$',
+            reg: '^(#?)*(原神)?转生$',
             fnc: 'relife'
           }
       ]
@@ -39,85 +39,60 @@ export default class Button {
       number = []
       type = []
       number[0] = '十连'
-      type[0] = '武器'
+      type[0] = e.isSr?'光锥':'武器'
     }
 
     if(type == null){
       type = []
       type[0] = ''
     }
-    type[0] = type[0].replace(/武器/, '武器池').replace(/常驻/, '常驻池')
+    type[0] = type[0].replace(/武器/, '武器池').replace(/光锥/, '光锥池').replace(/常驻/, '常驻池')
 
     let list = [
-      { label: `up池1`, data: `/${game}${number[0]}` },
-      { label: `up池2`, data: `/${game}${number[0]}2` },
-      { label: `常驻池`, data: `/${game}${number[0]}常驻池` },
+      { label: `up池1`, data: `/${game}${number[0]}`, enter: true },
+      { label: `up池2`, data: `/${game}${number[0]}2`, enter: true },
+      { label: `常驻池`, data: `/${game}${number[0]}常驻池`, enter: true },
     ]
-    button.push(...toButton(list))
+    button.push(...Bot.Button(list))
 
     list = [
-      { label: `定轨`, data: `/${game}定轨` },
-      { label: `${weapon}池`, data: `/${game}${number[0]}${weapon}池` },
+      { label: `定轨`, data: `/${game}定轨`, enter: true },
+      { label: `${weapon}池`, data: `/${game}${number[0]}${weapon}池`, enter: true },
     ]
-    button.push(...toButton(list))
+    button.push(...Bot.Button(list))
 
     list = [
-      { label: `单抽`, data: `/${game}单抽${type[0]}` },
-      { label: `十连`, data: `/${game}十连${type[0]}` },
+      { label: `单抽`, data: `/${game}单抽${type[0]}`, enter: true },
+      { label: `十连`, data: `/${game}十连${type[0]}`, enter: true },
     ]
-    button.push(...toButton(list))
+    if ([4, '4'].includes(e.bot.config.markdown.type))
+      list.push({ label: `保底`, data: `/${game}${(type[0].match(/武器|光锥/))?'八十':'九十'}连${type[0]}`, enter: true })
+    button.push(...Bot.Button(list))
 
-    number = ['派蒙','十连','单抽']
-    number[0] = number[Math.floor(Math.random()*4)]
     type = ['','2','常驻池',`${weapon}池`]
     type[0] = type[Math.floor(Math.random()*4)]
+    number = ['十连','十连','单抽']
+    if ([1, '1', 4, '4'].includes(e.bot.config.markdown.type))
+    number.push(`${(type[0].match(/武器|光锥/))?'八十':'九十'}连`)
+    number[0] = number[Math.floor(Math.random()*4)]
+
     if(number[0] == '派蒙')
       list = [
-        { label: `交给派蒙抽`, data: `抽卡的钱被小派蒙拿去买甜甜花酿鸡了` },
+        { label: `交给派蒙抽`, data: `抽卡的钱被小派蒙拿去买甜甜花酿鸡了`, enter: true },
       ]
     else
       list = [
-        { label: `交给派蒙抽`, data: `/${game}${number[0]}${type[0]}` },
+        { label: `交给派蒙抽`, data: `/${game}${number[0]}${type[0]}`, enter: true },
       ]
-    button.push(...toButton(list))
+    button.push(...Bot.Button(list))
 
     return button
   }
 
   relife(){
     const button = [
-        { label: `重生提瓦特之我是`, data: `/转生` },
+        { label: `重生提瓦特之我是`, data: `/转生`, enter: true },
     ]
-    return toButton(button)
+    return Bot.Button(button)
   }
-}
-
-function toButton(list, line = 3) {
-  let button = []
-  let arr = []
-  let index = 1
-  for (const i of list) {
-    arr.push({
-      id: String(Date.now()),
-      render_data: {
-        label: i.label,
-        style: 1
-      },
-      action: {
-        type: 2,
-        permission: { type: 2 },
-        data: i.data,
-        enter: true,
-        unsupport_tips: "code: 45",
-      }
-    })
-    if (index % line == 0 || index == list.length) {
-      button.push({type: 'button',
-        buttons: arr
-      })
-      arr = []
-    }
-    index++
-  }
-  return button
 }
