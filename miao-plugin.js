@@ -1,4 +1,4 @@
-/*原作者：风间叶(1936472877), Lain.(1072411694)*/
+/*原作者：[风间叶](https://github.com/xiaoye12123/), [Lain.](https://github.com/Zyy955/)*/
 export default class Button {
   constructor () {
     this.plugin = {
