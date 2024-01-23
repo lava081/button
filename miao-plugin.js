@@ -1,4 +1,4 @@
-/*原作者：[风间叶](https://github.com/xiaoye12123/), [Lain.](https://github.com/Zyy955/)*/
+/*原作者：风间叶(1936472877), Lain.(1072411694)*/
 export default class Button {
   constructor () {
     this.plugin = {
@@ -11,7 +11,11 @@ export default class Button {
           fnc: 'help'
         },
         {
-          reg: '^#(星铁|原神)?(全部面板更新|更新全部面板|获取游戏角色详情|更新面板|面板更新)',
+          reg: /^#(星铁|原神)?获取游戏角色详情( )?(\d{9})?$/,
+          fnc: 'profile'
+        },
+        {
+          reg: /^#(星铁|原神)?(更新)?(全部)?面板(更新)?( )?(\d{9})?$/,
           fnc: 'profile'
         },
         {
@@ -73,10 +77,6 @@ export default class Button {
   }
 
   bingUid(e) {
-    if (e.isCustom) {
-      return false
-    }
-    e.isCustom = true
     const game = (e.game === 'sr' || e.isSr) ? '星铁' : ''
     const list = [
       { label: '扫码登录', data: '/扫码绑定' },
@@ -92,10 +92,6 @@ export default class Button {
   }
 
   detail(e){
-    if (e.isCustom) {
-      return false
-    }
-    e.isCustom = true
     const raw = e.msg.replace(/#|老婆|老公|星铁|原神/g, '').trim()
     const reg = /^#*([^#]+)\s*(详细|详情|面板|面版|圣遗物|武器[1-7]?|伤害([1-9]+\d*)?)\s*(\d{9})*(.*[换变改].*)?$/
     const name = reg.exec(raw)[1]
@@ -124,10 +120,6 @@ export default class Button {
   }
 
   avatarList(e) {
-    if (e.isCustom) {
-      return false
-    }
-    e.isCustom = true
     const game = (e.game === 'sr' || e.isSr) ? '星铁' : ''
     const list = [
       { label: '深渊', data: `/${game}深渊` },
