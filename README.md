@@ -7,20 +7,12 @@
 
 Gitee：
 ```
-cd ./plugins/Lain-plugin/plugins/button
-git init
-git remote add origin https://gitee.com/lava081/button
-git checkout master
-git pull
+git clone https://gitee.com/lava081/button ./plugins/Lain-plugin/plugins/button/button
 ```
 
 Github：
 ```
-cd ./plugins/Lain-plugin/plugins/button
-git init
-git remote add origin https://github.com/lava081/button
-git checkout master
-git pull
+git clone https://github.com/lava081/button ./plugins/Lain-plugin/plugins/button/button
 ```
 
 ## 特别鸣谢

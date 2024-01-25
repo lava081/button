@@ -2,8 +2,8 @@
 export default class Button {
   constructor () {
     this.plugin = {
-      name: '状态按钮',
-      dsc: '状态按钮',
+      name: 'miao-plugin',
+      dsc: 'miao-plugin',
       priority: 100,
       rule: [
         {
@@ -27,11 +27,15 @@ export default class Button {
           fnc: 'bingUid'
         },
         {
-          reg: /^#*([^#]+)\s*(最强|最高分)?(详细|详情|面板|面版|圣遗物|武器[1-7]?|伤害([1-9]+\d*)?)\s*(\d{9})*(.*[换变改].*)?$/,
-          fnc: 'detail'
+          reg: /^#?(原神|星铁)?(群|群内)?(排名|排行)?(最强|最高|最高分|最牛|第一)+.+/,
+          fnc: 'rank'
         },
         {
-          reg: /^#*(最强|最高分)([^#*(最强|最高分)]+)\s*(详细|详情|面板|面版|圣遗物|武器[1-7]?|伤害([1-9]+\d*)?)?$/,
+          reg: /^#?(原神|星铁)?(群|群内)?(.*)(排名|排行)/,
+          fnc: 'rank'
+        },
+        {
+          reg: /^#*([^#]+)\s*(详细|详情|面板|面版|圣遗物|武器[1-7]?|伤害([1-9]+\d*)?)\s*(\d{9})*(.*[换变改].*)?$/,
           fnc: 'detail'
         },
         {
@@ -95,9 +99,24 @@ export default class Button {
     return button
   }
 
+  rank(e){
+    const game = (e.game === 'sr' || e.isSr) ? '星铁' : ''
+    const role = e.msg.replace(/(#| |老婆|老公|星铁|原神|最强|最高分|排名|排行|第一|最高|最牛|圣遗物|评分|群|群内|面板|面版|武器[1-7]?|伤害([1-9]+\d*)?)/g,'')
+    const list = [
+      { label: `最强${ (role == '') ? '面板' : role }`, data: `/最强${role}` },
+      { label: `最高分${ (role == '') ? '面板' : role }`, data: `/最高分${role}` },
+
+      { label: '最强排行', data: `/最强${role}排行` },
+      { label: '最高分排行', data: `/最高分${role}排行` },
+
+      { label: `${ (role == '') ? '更新' : role }面板`, data: `/${game}${ (role == '') ? '更新' : role }面板` },
+    ]
+    return Bot.Button(list, 2)
+  }
+
   detail(e){
-    const raw = e.msg.replace(/#|老婆|老公|星铁|原神|最强|最高分/g, '').trim()
-    const reg = /^#*([^#]+)\s*(详细|详情|面板|面版|圣遗物|武器[1-7]?|伤害([1-9]+\d*)?)?\s*(\d{9})*(.*[换变改].*)?$/
+    const raw = e.msg.replace(/#|老婆|老公|星铁|原神/g, '').trim()
+    const reg = /^#*([^#]+)\s*(详细|详情|面板|面版|圣遗物|武器[1-7]?|伤害([1-9]+\d*)?)\s*(\d{9})*(.*[换变改].*)?$/
     const name = reg.exec(raw)[1]
     const game = (e.game === 'sr' || e.isSr) ? '星铁' : ''
     if (/(详情|详细|面板)更新$/.test(raw) || (/更新/.test(raw) && /(详情|详细|面板)$/.test(raw))) {
