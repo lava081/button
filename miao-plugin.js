@@ -4,7 +4,7 @@ export default class Button {
     this.plugin = {
       name: 'miao-plugin',
       dsc: 'miao-plugin',
-      priority: 100,
+      priority: 101,
       rule: [
         {
           reg: '^#?喵喵(命令|帮助|菜单|help|说明|功能|指令|使用说明)$',
@@ -31,7 +31,7 @@ export default class Button {
           fnc: 'rank'
         },
         {
-          reg: /^#?(原神|星铁)?(群|群内)?(.*)(排名|排行)/,
+          reg: /^#?(原神|星铁)?(群|群内)?(.*)(排名|排行)(榜)?$/,
           fnc: 'rank'
         },
         {
