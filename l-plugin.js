@@ -34,24 +34,19 @@ export default class Button {
   }
 
   help(){
-    let list
-    const button = []
-    list = [
-      { label: '塔罗牌', data: `塔罗牌` },
-      { label: '美食推荐', data: `今天吃什么` },
-      { label: '求签', data: `求签` },
+    const button = [
+      [
+        { label: '塔罗牌', callback: `塔罗牌` },
+        { label: '美食推荐', callback: `今天吃什么` },
+        { label: '求签', callback: `求签` },
+      ],[
+        { label: 'LeetCode', data: `随机一题` },
+      ],[
+        { label: '骰子', data: `r 1 6` },
+        { label: '帮我选', data: `roll 塔罗牌 求签` },
+      ]
     ]
-    button.push(...toButton(list, 3, true))
-    list = [
-      { label: 'LeetCode', data: `随机一题` },
-    ]
-    button.push(...toButton(list))
-    list = [
-      { label: '骰子', data: `r 1 6` },
-      { label: '帮我选', data: `roll 塔罗牌 求签` },
-    ]
-    button.push(...toButton(list))
-    return button
+    return Bot.Button(button)
   }
 
   LeetCode(){
@@ -59,65 +54,34 @@ export default class Button {
       { label: '再来一题', data: `随机一题` },
       { label: '查看题解', data: `题解` },
     ]
-    return toButton(button)
+    return Bot.Button(button)
   }
 
   kauChim(){
     const button = [
-      { label: '我要解签…', data: `御神签` },
+      { label: '我要解签…', callback: `御神签` },
     ]
-    return toButton(button, 3, true)
+    return Bot.Button(button)
   }
 
   what2eat(){
     const button = [
-      { label: '换一批', data: `今天吃什么` },
+      { label: '换一批', callback: `今天吃什么` },
     ]
-    return toButton(button, 3, true)
+    return Bot.Button(button)
   }
 
   tarot(){
     const button = [
-      { label: '再卜一卦', data: `塔罗牌` },
+      { label: '再卜一卦', callback: `塔罗牌` },
     ]
-    return toButton(button, 3, true)
+    return Bot.Button(button)
   }
 
   roll(e){
     const button = [
       { label: '我不满意', data: `${e.msg.replace(/#/,'\/')}` },
     ]
-    return toButton(button)
+    return Bot.Button(button)
   }
-}
-
-function toButton (list, line = 3, allow_enter = false) {
-  let button = []
-  let arr = []
-  let index = 1
-  for (const i of list) {
-    arr.push({
-      id: String(Date.now()),
-      render_data: {
-        label: i.label,
-        style: 1
-      },
-      action: {
-        type: 2,
-        permission: { type: 2 },
-        data: i.data,
-        enter: allow_enter,
-        unsupport_tips: 'code: 45'
-      }
-    })
-    if (index % line == 0 || index == list.length) {
-      button.push({
-        type: 'button',
-        buttons: arr
-      })
-      arr = []
-    }
-    index++
-  }
-  return button
 }

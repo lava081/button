@@ -58,7 +58,7 @@ export default class Button {
       { label: `米游社登录`, data: `/扫码登录` },
       { label: `刷新ck`, data: `/刷新ck` },
     ]
-    return toButton(button)
+    return Bot.Button(button)
   }
 
   async sign(){
@@ -69,7 +69,7 @@ export default class Button {
         { label: `米游社登录`, data: `/扫码登录` },
         { label: `签到`, data: `/签到` },
     ]
-    return toButton(button)
+    return Bot.Button(button)
   }
 
   async note(){
@@ -81,7 +81,7 @@ export default class Button {
         { label: `刷新ck`, data: `/刷新ck` },
         { label: `米游社登录`, data: `/扫码登录` },
     ]
-    return toButton(button)
+    return Bot.Button(button)
   }
 
   async gacha(e){
@@ -109,35 +109,6 @@ export default class Button {
         { label: `米游社登录`, data: `/扫码登录` },
         { label: `更新记录`, data: `/更新抽卡记录` },
     ]
-    return toButton(button)
+    return Bot.Button(button)
   }
-}
-
-function toButton(list, line = 3) {
-  let button = []
-  let arr = []
-  let index = 1
-  for (const i of list) {
-    arr.push({
-      id: String(Date.now()),
-      render_data: {
-        label: i.label,
-        style: 1
-      },
-      action: {
-        type: 2,
-        permission: { type: 2 },
-        data: i.data,
-        unsupport_tips: "code: 45",
-      }
-    })
-    if (index % line == 0 || index == list.length) {
-      button.push({type: 'button',
-        buttons: arr
-      })
-      arr = []
-    }
-    index++
-  }
-  return button
 }
