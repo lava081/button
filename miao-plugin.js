@@ -115,7 +115,9 @@ export default class Button {
   }
 
   detail (e) {
-    const raw = e.raw_message.replace(/\*|\/|#|极限|核爆|辅助|平民|毕业|老婆|老公|星铁|原神/g, '').trim()
+    let raw = e.raw_message.replace(/\*|\/|#|极限|核爆|辅助|平民|毕业|老婆|老公|星铁|原神/g, '').trim()
+    if (raw.split(' ')[0].match(/\@/))
+      raw = raw.split(' ')[1]
     const reg = /^#*([^#]+)\s*(详细|详情|面板|面版|圣遗物|武器[1-7]?|伤害([1-9]+\d*)?)\s*(\d{9})*(.*[换变改].*)?$/
     const name = reg.exec(raw)[1]
     const game = (e.game === 'sr' || e.isSr) ? '星铁' : ''
