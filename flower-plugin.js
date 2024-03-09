@@ -65,13 +65,13 @@ export default class Button {
       { label: '单抽', callback: `#${game}单抽${type[0]}` },
       { label: '十连', callback: `#${game}十连${type[0]}` }
     ]
-    if ([4, '4'].includes(e.bot.config.markdown.type)) { list.push({ label: '保底', callback: `#${game}${(type[0].match(/武器|光锥/)) ? '八十' : '九十'}连${type[0]}` }) }
+    if (e.bot.config?.markdown && [4, '4'].includes(e.bot.config.markdown.type)) { list.push({ label: '保底', callback: `#${game}${(type[0].match(/武器|光锥/)) ? '八十' : '九十'}连${type[0]}` }) }
     button.push(list)
 
     type = ['', '2', '常驻池', `${weapon}池`]
     type[0] = type[Math.floor(Math.random() * type.length)]
     number = ['十连', '十连', '单抽']
-    if ([4, '4'].includes(e.bot.config.markdown.type)) { number.push(`${(type[0].match(/武器|光锥/)) ? '八十' : '九十'}连`) }
+    if (e.bot.config?.markdown && [4, '4'].includes(e.bot.config.markdown.type)) { number.push(`${(type[0].match(/武器|光锥/)) ? '八十' : '九十'}连`) }
     number[0] = number[Math.floor(Math.random() * number.length)]
 
     if (number[0] == '派蒙') {
