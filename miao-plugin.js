@@ -1,4 +1,65 @@
 /* 原作者：[风间叶](https://github.com/xiaoye12123/), [Lain.](https://github.com/Zyy955/), [夜](https://github.com/yeyeyye-eee) */
+import { alias as alias_gs } from '../../../../miao-plugin/resources/meta-gs/character/alias.js'
+import { alias as alias_sr } from '../../../../miao-plugin/resources/meta-sr/character/alias.js'
+import { extraChars as extra_gs } from '../../../../miao-plugin/resources/meta-gs/character/extra.js'
+let custom_gs = {}
+try {
+  // 尝试动态导入 customCharacters
+  const { customCharacters } = await import('../../../../miao-plugin/config/character.js')
+  custom_gs = customCharacters
+} catch (error) {
+  const { customCharacters } = await import('../../../../miao-plugin/config/character_default.js')
+  custom_gs = customCharacters
+}
+
+const alias = {
+  gs: {},
+  sr: {}
+}
+refreshAlias()
+
+/** 刷新别名列表 */
+async function refreshAlias () {
+  for (const origin_name in alias_gs) {
+    alias.gs[origin_name] = alias_gs[origin_name].split(',')
+    alias.gs[origin_name].push(origin_name)
+  }
+  for (const origin_name in extra_gs) {
+    alias.gs[origin_name] = extra_gs[origin_name].split(',')
+  }
+  for (const origin_name in custom_gs) {
+    if (!alias.gs[custom_gs[origin_name][0]]) {
+      alias.gs[custom_gs[origin_name][0]] = custom_gs[origin_name]
+    } else {
+      alias.gs[custom_gs[origin_name][0]].push(...custom_gs[origin_name])
+    }
+  }
+
+  for (const origin_name in alias_sr) {
+    alias.sr[origin_name] = alias_sr[origin_name].split(',')
+    alias.sr[origin_name].push(origin_name)
+  }
+}
+
+/**
+ * 在给定的文本中搜索与别名对象中任何别名匹配的字符串
+ * @param {string} text 要搜索的文本
+ * @param {boolean} isSr 是否为星铁
+ * @returns {Promise<string|null>} 如果找到匹配的别名，则返回该别名；否则返回 null
+ */
+
+async function findCharacter (text, isSr) {
+  const game = isSr ? 'sr' : 'gs'
+  for (const origin_name in alias[game]) {
+    for (const nickname of alias[game][origin_name]) {
+      if (text.includes(nickname)) {
+        return origin_name
+      }
+    }
+  }
+  return null
+}
+
 export default class Button {
   constructor () {
     this.plugin = {
@@ -19,7 +80,7 @@ export default class Button {
           fnc: 'profile'
         },
         {
-          reg: '^(#|\/)?(原神|星铁)?绑定(#|\/)?(绑定)?( )?(uid|UID)?( )?[1-9]',
+          reg: '^(#|/)?(原神|星铁)?绑定(#|/)?(绑定)?( )?(uid|UID)?( )?[1-9]',
           fnc: 'bingUid'
         },
         {
@@ -39,7 +100,7 @@ export default class Button {
           fnc: 'detail'
         },
         {
-          reg: /^(#(原神|星铁)?(角色|查询|查询角色|角色查询|人物)[ |0-9]*$)|(^(#*uid|#*UID)\+*[1|2|5-9][0-9]{8}$)|(^#[\+|＋]*[1|2|5-9][0-9]{8})/,
+          reg: /^(#(原神|星铁)?(角色|查询|查询角色|角色查询|人物)[ |0-9]*$)|(^(#*uid|#*UID)\+*[1|2|5-9][0-9]{8}$)|(^#[+|＋]*[1|2|5-9][0-9]{8})/,
           fnc: 'avatarList'
         },
         {
@@ -99,9 +160,14 @@ export default class Button {
     return button
   }
 
-  rank (e) {
+  async rank (e) {
     const game = (e.game === 'sr' || e.isSr) ? '星铁' : ''
-    const role = e.msg.replace(/(#| |老婆|老公|星铁|原神|最强|最高分|排名|排行|第一|最高|最牛|圣遗物|评分|群|群内|面板|面版|武器[1-7]?|伤害([1-9]+\d*)?)/g, '')
+    let role = e.msg.replace(/(#| |老婆|老公|星铁|原神|最强|最高分|排名|排行|第一|最高|最牛|圣遗物|评分|群|群内|面板|面版|武器[1-7]?|伤害([1-9]+\d*)?)/g, '')
+    if (!role) {
+      if (e.msg.match(/#(最强|最高分)(面板|排行)/)) {
+        role = ''
+      } else return false
+    }
     const list = [
       { label: `最强${(role == '') ? '面板' : role}`, data: `#最强${role}` },
       { label: `最高分${(role == '') ? '面板' : role}`, data: `#最高分${role}` },
@@ -114,13 +180,14 @@ export default class Button {
     return Bot.Button(list, 2)
   }
 
-  detail (e) {
-    let raw = e.raw_message.replace(/\*|\/|#|极限|核爆|辅助|平民|毕业|老婆|老公|星铁|原神/g, '').trim()
-    if (raw.split(' ')[0].match(/\@/))
+  async detail (e) {
+    let raw = e.raw_message.replace(/\*|\/|#|极限|核爆|辅助|平民|毕业|老婆|老公|星铁|原神/g, '').replace(/[换变改].*/, '').trim()
+    if (raw.split(' ')[0].match(/@/)) {
       raw = raw.split(' ')[1]
-    const reg = /^#*([^#]+)\s*(详细|详情|面板|面版|圣遗物|武器[1-7]?|伤害([1-9]+\d*)?)\s*(\d{9})*(.*[换变改].*)?$/
-    const name = reg.exec(raw)[1]
+    }
     const game = (e.game === 'sr' || e.isSr) ? '星铁' : ''
+    const name = await findCharacter(raw, game)
+    if (!name) return false
     if (/(详情|详细|面板)更新$/.test(raw) || (/更新/.test(raw) && /(详情|详细|面板)$/.test(raw))) {
       const button = this.profile(e)
       return button
