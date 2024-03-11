@@ -2,15 +2,6 @@
 import { alias as alias_gs } from '../../../../miao-plugin/resources/meta-gs/character/alias.js'
 import { alias as alias_sr } from '../../../../miao-plugin/resources/meta-sr/character/alias.js'
 import { extraChars as extra_gs } from '../../../../miao-plugin/resources/meta-gs/character/extra.js'
-let custom_gs = {}
-try {
-  // 尝试动态导入 customCharacters
-  const { customCharacters } = await import('../../../../miao-plugin/config/character.js')
-  custom_gs = customCharacters
-} catch (error) {
-  const { customCharacters } = await import('../../../../miao-plugin/config/character_default.js')
-  custom_gs = customCharacters
-}
 
 const alias = {
   gs: {},
@@ -20,6 +11,15 @@ refreshAlias()
 
 /** 刷新别名列表 */
 async function refreshAlias () {
+  let custom_gs = {}
+  try {
+    // 尝试动态导入 customCharacters
+    const { customCharacters } = await import('../../../../miao-plugin/config/character.js')
+    custom_gs = customCharacters
+  } catch (error) {
+    const { customCharacters } = await import('../../../../miao-plugin/config/character_default.js')
+    custom_gs = customCharacters
+  }
   for (const origin_name in alias_gs) {
     alias.gs[origin_name] = alias_gs[origin_name].split(',')
     alias.gs[origin_name].push(origin_name)
