@@ -1,4 +1,5 @@
 /* 原作者：[风间叶](https://github.com/xiaoye12123/), [Lain.](https://github.com/Zyy955/), [夜](https://github.com/yeyeyye-eee) */
+import Character from '../../../../miao-plugin/models/Character.js'
 import { alias as alias_gs } from '../../../../miao-plugin/resources/meta-gs/character/alias.js'
 import { alias as alias_sr } from '../../../../miao-plugin/resources/meta-sr/character/alias.js'
 import { extraChars as extra_gs } from '../../../../miao-plugin/resources/meta-gs/character/extra.js'
@@ -21,11 +22,19 @@ async function refreshAlias () {
     custom_gs = customCharacters
   }
   for (const origin_name in alias_gs) {
-    alias.gs[origin_name] = alias_gs[origin_name].split(',')
+    if (alias_gs[origin_name]) {
+      alias.gs[origin_name] = alias_gs[origin_name].split(',')
+    } else {
+      alias.gs[origin_name] = []
+    }
     alias.gs[origin_name].push(origin_name)
   }
   for (const origin_name in extra_gs) {
-    alias.gs[origin_name] = extra_gs[origin_name].split(',')
+    if (extra_gs[origin_name]) {
+      alias.gs[origin_name] = extra_gs[origin_name].split(',')
+    } else {
+      alias.gs[origin_name] = []
+    }
   }
   for (const origin_name in custom_gs) {
     if (!alias.gs[custom_gs[origin_name][0]]) {
@@ -36,7 +45,11 @@ async function refreshAlias () {
   }
 
   for (const origin_name in alias_sr) {
-    alias.sr[origin_name] = alias_sr[origin_name].split(',')
+    if (alias_sr[origin_name]) {
+      alias.sr[origin_name] = alias_sr[origin_name].split(',')
+    } else {
+      alias.sr[origin_name] = []
+    }
     alias.sr[origin_name].push(origin_name)
   }
 }
@@ -104,8 +117,16 @@ export default class Button {
           fnc: 'avatarList'
         },
         {
-          reg: '#?喵喵角色卡片',
+          reg: '#喵喵角色卡片',
           fnc: 'avatarList'
+        },
+        {
+          reg: '#喵喵WIKI',
+          fnc: 'tip'
+        },
+        {
+          reg: '.*(攻略|天赋|技能|行迹|命座|命之座|星魂|资料|图鉴|素材|材料|天赋)$',
+          fnc: 'tip'
         }
       ]
     }
@@ -162,7 +183,7 @@ export default class Button {
 
   async rank (e) {
     const game = (e.game === 'sr' || e.isSr) ? '星铁' : ''
-    let role = e.msg.replace(/(#| |老婆|老公|星铁|原神|最强|最高分|排名|排行|第一|最高|最牛|圣遗物|评分|群|群内|面板|面版|武器[1-7]?|伤害([1-9]+\d*)?)/g, '')
+    let role = await findCharacter(e.msg, game)
     if (!role) {
       if (e.msg.match(/#(最强|最高分)(面板|排行)/)) {
         role = ''
@@ -222,5 +243,42 @@ export default class Button {
     ]
     const button = Bot.Button(list, 3)
     return button
+  }
+
+  async tip (e) {
+    const game = (e.game === 'sr' || e.isSr) ? '星铁' : ''
+    const name = await findCharacter(e.raw_message, game)
+    if (!name) return false
+    let material = ''
+    if (!game) {
+      material = Character.get(name).getMaterials()
+        .find(material => material.num == 168)
+    }
+    const list = [
+      [
+        { label: `${name}攻略` }
+      ],
+      [
+        { label: `${name}${game ? '行迹' : '天赋'}` },
+        { label: `${name}${game ? '星魂' : '命座'}` }
+      ],
+      [
+        { label: `${name}面板`, data: `#${game}${name}面板` },
+        { label: '扫码登录', data: '#扫码登录' }
+      ]
+    ]
+    if (!game) {
+      list[0].push({ label: '参考面板', data: `#${game}${name}参考面板` })
+    }
+    if (material) {
+      list.push([
+        { label: '材料统计', data: `#${game}${name}材料` },
+        { label: '今日素材', data: '#今日素材' }
+      ])
+      list.push([
+        { label: `${material.label}点位`, data: `${material.label}在哪里` }
+      ])
+    }
+    return Bot.Button(list)
   }
 }
