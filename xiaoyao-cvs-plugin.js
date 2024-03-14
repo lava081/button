@@ -18,7 +18,7 @@ export default class Button {
           fnc: 'note'
         },
         {
-          reg: '^#*(原神|星铁)?(((更新|获取|导出)?抽卡记录)|((全部)?(抽卡|抽奖|角色|武器|常驻|up|新手|光锥|全部)池*(记录|祈愿|分析|统计))|((记录|抽卡|安卓|苹果|电脑|pc|ios)帮助))$',
+          reg: '^#*(原神|星铁)?(((更新|获取|导出)?抽卡记录)|((全部)?(抽卡|集录|抽奖|角色|武器|常驻|up|新手|光锥|全部)池*(记录|祈愿|分析|统计))|((记录|抽卡|安卓|苹果|电脑|pc|ios)帮助))$',
           fnc: 'gacha'
         },
         {
@@ -85,31 +85,21 @@ export default class Button {
   }
 
   async gacha (e) {
-    let button
-    if (e.isSr) {
-      button = [
-        { label: '角色记录', data: '#星铁角色池记录' },
-        { label: '光锥记录', data: '#星铁光锥池记录' },
-        { label: '全部记录', data: '#星铁全部记录' },
+    const game = e.isSr ? '星铁' : ''
+    const button = [
+      { label: '角色记录', data: `#${game}角色池记录` },
+      { label: '武器记录', data: `#${game}${game ? '光锥' : '武器'}池记录` },
+      { label: '集录记录', data: `#${game}集录池记录` },
+      { label: '全部记录', data: `#${game}全部记录` },
 
-        { label: '角色统计', data: '#星铁角色池统计' },
-        { label: '光锥统计', data: '#星铁光锥池统计' },
-        { label: '全部统计', data: '#星铁全部统计' }
-      ]
-    } else {
-      button = [
-        { label: '角色记录', data: '#角色池记录' },
-        { label: '武器记录', data: '#武器池记录' },
-        { label: '全部记录', data: '#全部记录' },
+      { label: '角色统计', data: `#${game}角色池统计` },
+      { label: '武器统计', data: `#${game}${game ? '光锥' : '武器'}池统计` },
+      { label: '集录统计', data: `#${game}集录池统计` },
+      { label: '全部统计', data: `#${game}全部统计` },
 
-        { label: '角色统计', data: '#角色池统计' },
-        { label: '武器统计', data: '#武器池统计' },
-        { label: '全部统计', data: '#全部统计' },
-
-        { label: '米游社登录', data: '#扫码登录' },
-        { label: '更新记录', data: '#更新抽卡记录' }
-      ]
-    }
-    return Bot.Button(button)
+      { label: '米游社登录', data: '#扫码登录' }
+    ]
+    if (!game) button.push({ label: '更新记录', data: '#更新抽卡记录' })
+    return Bot.Button(button, 4)
   }
 }
