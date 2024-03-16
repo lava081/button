@@ -97,23 +97,24 @@ export default class Button {
 
   profile (e) {
     const roleList = e?.newChar ? (Object.keys(e.newChar) || []) : []
+    const game = (e.game === 'sr' || e.isSr) ? '星铁' : '原神'
     const button = []
 
     const list = [
       { label: '扫码登录', data: '#扫码登录' },
-      { label: '更新面板', data: `#${e.game === 'sr' ? '星铁' : '原神'}更新面板` },
-      { label: '绑定uid', data: `#${e.game === 'sr' ? '星铁' : '原神'}绑定` }
+      { label: '更新面板', data: `#${game}更新面板` },
+      { label: '绑定uid', data: `#${game}绑定` }
     ]
     button.push(...Bot.Button(list))
 
     const list2 = []
-    for (let role of roleList) { list2.push({ label: role, data: `#${e.game === 'sr' ? '星铁' : '原神'}${role}面板` }) }
+    for (let role of roleList) { list2.push({ label: role, data: `#${game}${role}面板` }) }
     button.push(...Bot.Button(list2, 2))
     return button
   }
 
   bingUid (e) {
-    const game = (e.game === 'sr' || e.isSr) ? '星铁' : ''
+    const game = (e.game === 'sr' || e.isSr) ? '星铁' : '原神'
     const list = [
       { label: '扫码登录', data: '#扫码绑定' }
     ]
@@ -136,13 +137,13 @@ export default class Button {
       } else return false
     }
     const list = [
-      { label: `最强${(role == '') ? '面板' : role}`, data: `#最强${role}` },
-      { label: `最高分${(role == '') ? '面板' : role}`, data: `#最高分${role}` },
+      { label: `最强${role ? role : '面板'}`, data: `#最强${role}` },
+      { label: `最高分${role ? role : '面板'}`, data: `#最高分${role}` },
 
       { label: '最强排行', data: `#最强${role}排行` },
       { label: '最高分排行', data: `#最高分${role}排行` },
 
-      { label: `${(role == '') ? '更新' : role}面板`, data: `#${game}${(role == '') ? '更新' : role}面板` }
+      { label: `${role ? role : '更新'}面板`, data: `#${game}${role ? role : '更新'}面板` }
     ]
     return Bot.Button(list, 2)
   }
