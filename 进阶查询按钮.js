@@ -18,7 +18,7 @@ export default class Button {
                 fnc: 'buttonCenter'
             },
             {
-                reg: /^#(原神|星铁)?练度统计$/,
+                reg: /^#(原神|星铁)?练度统计[ |0-9]*$/,
                 fnc: 'buttonCenter'
             },
             {
