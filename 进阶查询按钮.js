@@ -28,14 +28,6 @@ export default class Button {
             {
               reg: '^#?刷新充值记录$',
               fnc: "buttonCenter",
-            },
-            {
-              reg: 'authkey=',
-              fnc: "buttonCenter",
-            },
-            {
-              reg: /\[uid\:\d+\]/,
-              fnc: "buttonCenter",
             }
         ]
       }
