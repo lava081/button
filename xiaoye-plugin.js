@@ -75,7 +75,7 @@ export default class Button {
       { label: '刷遗物xx，x次', data: '刷圣遗物x次' },
 
       { label: '一键强化遗物', callback: '一键强化圣遗物' },
-      { label: '查看遗物第x页', data: '查看圣遗物（第x页）' }
+      { label: '查看遗物第x页', data: '查看圣遗物第x页' }
     ]
     return Bot.Button(button, 2)
   }
@@ -96,7 +96,7 @@ export default class Button {
       { label: '刷遗物xx，x次', data: '刷圣遗物x次' },
 
       { label: '一键强化遗物', callback: '一键强化圣遗物' },
-      { label: '查看遗物第x页', data: '查看圣遗物（第x页）' }
+      { label: '查看遗物第x页', data: '查看圣遗物第x页' }
     ]
     return Bot.Button(button, 2)
   }
@@ -117,7 +117,7 @@ export default class Button {
       { label: '刷遗物xx，x次', data: '刷圣遗物x次' },
 
       { label: '一键强化遗物', callback: '一键强化圣遗物' },
-      { label: '查看遗物第x页', data: '查看圣遗物（第x页）' }
+      { label: '查看遗物第x页', data: '查看圣遗物第x页' }
     ]
     return Bot.Button(button, 2)
   }
@@ -137,7 +137,7 @@ export default class Button {
       { label: '刷遗物xx，x次', data: '刷圣遗物x次' },
 
       { label: '一键强化遗物', callback: '一键强化圣遗物' },
-      { label: '查看遗物第x页', data: '查看圣遗物（第x页）' }
+      { label: '查看遗物第x页', data: '查看圣遗物第x页' }
     ]
     return Bot.Button(button, 2)
   }
@@ -158,7 +158,7 @@ async save () {
       { label: '刷遗物xx，x次', data: '刷圣遗物x次' },
 
       { label: '一键强化遗物', callback: '一键强化圣遗物' },
-      { label: '查看遗物第x页', data: '查看圣遗物（第x页）' }
+      { label: '查看遗物第x页', data: '查看圣遗物第x页' }
     ]
     return Bot.Button(button, 2)
   }
@@ -180,7 +180,7 @@ async view () {
       { label: '刷遗物xx，x次', data: '刷圣遗物x次' },
 
       { label: '一键强化遗物', callback: '一键强化圣遗物' },
-      { label: '查看遗物第x页', data: '查看圣遗物（第x页）' }
+      { label: '查看遗物第x页', data: '查看圣遗物第x页' }
     ]
     return Bot.Button(button, 2)
   }
@@ -202,7 +202,7 @@ async delete () {
       { label: '刷遗物xx，x次', data: '刷圣遗物x次' },
 
       { label: '一键强化遗物', callback: '一键强化圣遗物' },
-      { label: '查看遗物第x页', data: '查看圣遗物（第x页）' }
+      { label: '查看遗物第x页', data: '查看圣遗物第x页' }
     ]
     return Bot.Button(button, 2)
   }
