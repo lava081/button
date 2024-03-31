@@ -223,7 +223,7 @@ export default class Button {
         { label: '今日素材', data: '#今日素材' }
       ])
       list.push([
-        { label: `${material.label}点位`, data: `${material.label}在哪里` }
+        { label: `${material.label}点位`, data: `#${material.label}在哪里` }
       ])
     }
     return Bot.Button(list)
