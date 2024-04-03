@@ -196,9 +196,6 @@ export default class Button {
         { label: '扫码登录', data: '#扫码登录' }
       ]
     ]
-    if (!game) {
-      list[0].push({ label: '参考面板', data: `#${game}${char.name}参考面板` })
-    }
     if (material) {
       list.push([
         { label: '材料统计', data: `#${game}${char.name}材料` },
@@ -207,6 +204,11 @@ export default class Button {
       list.push([
         { label: `${material.label}点位`, data: `#${material.label}在哪里` }
       ])
+    }
+    if (!game) {
+      list[0].push({ label: '参考面板', data: `#${game}${char.name}参考面板` })
+      list[3].push({ label: '图鉴', data: `${char.name}图鉴` })
+      list[4].push({ label: `${char.name}照片` })
     }
     return Bot.Button(list)
   }
