@@ -111,9 +111,9 @@ export default class Button {
   }
 
   async rank (e) {
-    const game = (e.game === 'sr' || e.isSr) ? '星铁' : ''
     let role = e.msg.replace(/(#|星铁|原神|喵喵|最强|最高分|第一|词条|双爆|双暴|极限|最高|最多|最牛|圣遗物|评分|群内|群|排名|排行|面板|面版|详情|榜)/g, '')
     const char = Character.get(role)
+    const game = (char.game === 'sr') ? '星铁' : ''
     if (!char) {
       if (e.msg.match(/#(最强|最高分)(面板|排行)/)) {
         role = ''
@@ -132,20 +132,20 @@ export default class Button {
   }
 
   async detail (e) {
-    const game = (e.game === 'sr' || e.isSr) ? '星铁' : ''
-    const name = Character.get(e.avatar).name
+    const char = Character.get(e.avatar)
+    const game = (char.game === 'sr') ? '星铁' : ''
     if (/(详情|详细|面板)更新$/.test(e.raw_message) || (/更新/.test(e.raw_message) && /(详情|详细|面板)$/.test(e.raw_message))) {
       const button = this.profile(e)
       return button
     } else {
-      if (!name) return false
+      if (!char.name) return false
       const button = []
       const list = [
-        { label: `${name}攻略`, data: `#${game}${name}攻略` },
-        { label: `${name}排行`, data: `#${game}${name}排行` },
+        { label: `${char.name}攻略`, data: `#${game}${char.name}攻略` },
+        { label: `${char.name}排行`, data: `#${game}${char.name}排行` },
 
-        { label: `${name}面板`, data: `#${game}${name}面板` },
-        { label: '极限面板', data: `#${game}${name}极限面板` }
+        { label: `${char.name}面板`, data: `#${game}${char.name}面板` },
+        { label: '极限面板', data: `#${game}${char.name}极限面板` }
       ]
       button.push(...Bot.Button(list, 2))
       const list2 = [
@@ -172,11 +172,11 @@ export default class Button {
   }
 
   async tip (e) {
-    const game = (e.game === 'sr' || e.isSr) ? '星铁' : ''
     const role = e.msg
     .replace(/(攻略|天赋|技能|行迹|命座|命之座|星魂|资料|图鉴|素材|材料|天赋)[0-9]?/, '')
     .replace(/#|星铁|原神|喵喵/g, '')
     const char = e.char || Character.get(role)
+    const game = (char.game === 'sr') ? '星铁' : ''
     if (!char) return false
     let material = ''
     if (!game) {
