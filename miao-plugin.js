@@ -1,23 +1,5 @@
 /* 原作者：[风间叶](https://github.com/xiaoye12123/), [Lain.](https://github.com/Zyy955/), [夜](https://github.com/yeyeyye-eee) */
 import Character from '../../../../miao-plugin/models/Character.js'
-import Meta from '../../../../miao-plugin/components/Meta.js'
-
-/**
- * 在给定的文本中搜索与别名对象中任何别名匹配的字符串
- * @param {string} text 要搜索的文本
- * @param {boolean} isSr 是否为星铁
- * @returns {Promise<string|null>} 如果找到匹配的别名，则返回该别名；否则返回 null
- */
-
-async function findCharacter (text, isSr) {
-  const game = isSr ? 'sr' : 'gs'
-  for (const nickname of Meta.getAlias(game, 'char')) {
-    if (text.includes(nickname)) {
-      return nickname
-    }
-  }
-  return null
-}
 
 export default class Button {
   constructor () {
@@ -71,7 +53,7 @@ export default class Button {
           fnc: 'tip'
         },
         {
-          reg: '.*(攻略|天赋|技能|行迹|命座|命之座|星魂|资料|图鉴|素材|材料|天赋)$',
+          reg: /.*(攻略|天赋|技能|行迹|命座|命之座|星魂|资料|图鉴|素材|材料|天赋)[0-9]?$/,
           fnc: 'tip'
         }
       ]
@@ -130,8 +112,9 @@ export default class Button {
 
   async rank (e) {
     const game = (e.game === 'sr' || e.isSr) ? '星铁' : ''
-    let role = await findCharacter(e.msg, game)
-    if (!role) {
+    let role = e.msg.replace(/(#|星铁|原神|喵喵|最强|最高分|第一|词条|双爆|双暴|极限|最高|最多|最牛|圣遗物|评分|群内|群|排名|排行|面板|面版|详情|榜)/g, '')
+    const char = Character.get(role)
+    if (!char) {
       if (e.msg.match(/#(最强|最高分)(面板|排行)/)) {
         role = ''
       } else return false
@@ -149,17 +132,13 @@ export default class Button {
   }
 
   async detail (e) {
-    let raw = e.raw_message.replace(/\*|\/|#|极限|核爆|辅助|平民|毕业|老婆|老公|星铁|原神/g, '').replace(/[换变改].*/, '').trim()
-    if (raw.split(' ')[0].match(/@/)) {
-      raw = raw.split(' ')[1]
-    }
     const game = (e.game === 'sr' || e.isSr) ? '星铁' : ''
-    const name = await findCharacter(raw, game)
-    if (!name) return false
-    if (/(详情|详细|面板)更新$/.test(raw) || (/更新/.test(raw) && /(详情|详细|面板)$/.test(raw))) {
+    const name = Character.get(e.avatar).name
+    if (/(详情|详细|面板)更新$/.test(e.raw_message) || (/更新/.test(e.raw_message) && /(详情|详细|面板)$/.test(e.raw_message))) {
       const button = this.profile(e)
       return button
     } else {
+      if (!name) return false
       const button = []
       const list = [
         { label: `${name}攻略`, data: `#${game}${name}攻略` },
@@ -194,32 +173,35 @@ export default class Button {
 
   async tip (e) {
     const game = (e.game === 'sr' || e.isSr) ? '星铁' : ''
-    const name = await findCharacter(e.raw_message, game)
-    if (!name) return false
+    const role = e.msg
+    .replace(/(攻略|天赋|技能|行迹|命座|命之座|星魂|资料|图鉴|素材|材料|天赋)[0-9]?/, '')
+    .replace(/#|星铁|原神|喵喵/g, '')
+    const char = e.char || Character.get(role)
+    if (!char) return false
     let material = ''
     if (!game) {
-      material = Character.get(name).getMaterials()
-        .find(material => material.num == 168)
+      material = char.getMaterials()
+      .find(material => material.num == 168)
     }
     const list = [
       [
-        { label: `${name}攻略` }
+        { label: `${char.name}攻略` }
       ],
       [
-        { label: `${name}${game ? '行迹' : '天赋'}` },
-        { label: `${name}${game ? '星魂' : '命座'}` }
+        { label: `${char.name}${game ? '行迹' : '天赋'}` },
+        { label: `${char.name}${game ? '星魂' : '命座'}` }
       ],
       [
-        { label: `${name}面板`, data: `#${game}${name}面板` },
+        { label: `${char.name}面板`, data: `#${game}${char.name}面板` },
         { label: '扫码登录', data: '#扫码登录' }
       ]
     ]
     if (!game) {
-      list[0].push({ label: '参考面板', data: `#${game}${name}参考面板` })
+      list[0].push({ label: '参考面板', data: `#${game}${char.name}参考面板` })
     }
     if (material) {
       list.push([
-        { label: '材料统计', data: `#${game}${name}材料` },
+        { label: '材料统计', data: `#${game}${char.name}材料` },
         { label: '今日素材', data: '#今日素材' }
       ])
       list.push([
