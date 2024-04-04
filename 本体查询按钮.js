@@ -8,8 +8,10 @@ export default class Button {
           {
             reg: /^(#(原神|星铁)?(角色|查询|查询角色|角色查询|人物)[ |0-9]*$)|(^(#*uid|#*UID)\+*[1|2|5-9][0-9]{8}$)|(^#[+|＋]*[1|2|5-9][0-9]{8})/,
             fnc: 'buttonCenter'
-          },
-          { 
+          },{
+            reg: '^(#(星铁)(角色|查询|查询角色|角色查询|人物|卡片)[ |0-9]*$)|(^(#*(星铁)uid|#*(星铁)UID)(\\+|\\s)*([1-9]|18)[0-9]{8}$)|(^#(星铁)[\\+|＋]*([1-9]|18)[0-9]{8})',
+            fnc: 'buttonCenter'
+          },{ 
             reg: '^#(宝箱|成就|尘歌壶|家园|探索|探险|声望|探险度|探索度)[ |0-9]*$',
             fnc: 'buttonCenter'
           },
@@ -27,9 +29,10 @@ export default class Button {
       }
     }
     async buttonCenter(e){
+      const game = (e.game === 'sr' || e.isSr) ? '星铁' : ''
       const list = [
         [
-          { label: '角色', callback: `#角色` },
+          { label: '角色', callback: `#${game}角色` },
           { label: '探索', callback: `#探索` },
         ],[
           { label: '深渊', callback: '#深渊' },
