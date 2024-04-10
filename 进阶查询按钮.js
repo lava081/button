@@ -26,6 +26,10 @@ export default class Button {
                 fnc: 'buttonCenter'
             },
             {
+                reg: /^#(强制)?(刷新|更新)(所有|角色)*(天赋|技能)$/,
+                fnc: 'buttonCenter'
+            },
+            {
               reg: '^#?刷新充值记录$',
               fnc: "buttonCenter",
             }
@@ -36,16 +40,16 @@ export default class Button {
       const list = [
         [
           { label: '练度统计', callback: `#练度统计` },
-          { label: '星铁练度', callback: `#星铁练度统计` },
+          { label: '星铁练度', callback: `*练度统计` },
         ],[
-          { label: '天赋统计', callback: `#天赋统计` },
-          { label: '今日素材', callback: `#今日素材` },
-        ],[
+          { label: '刷新天赋', callback: `#刷新天赋` },
           { label: '充值记录', callback: `#刷新充值记录` },
+        ],[
+          { label: '今日素材', callback: `#今日素材` },
           { label: '明日素材', callback: `#明日素材` },
         ],[
           { label: '原神日历', callback: `#日历` },
-          { label: '星铁日历', callback: `#星铁日历` },
+          { label: '星铁日历', callback: `*日历` },
         ],[
           { label: '扫码绑定', callback: `#扫码绑定` },
           { label: '刷新CK', callback: `#刷新ck` },
